@@ -1,24 +1,78 @@
-import logo from './logo.svg';
-import './App.css';
+import Navbar from "./components/Navbar";
+import Personajes from "./components/Personajes";
+import { useEffect } from "react";
+import { useState } from "react";
+import { Fragment } from "react/cjs/react.production.min";
+import Footer from "./components/Footer";
+
+
+
 
 function App() {
+  
+  const[personajes, setPersonajes] = useState([]);
+
+  const urlInicial = "https://fedeperin-harry-potter-api.herokuapp.com/db";
+
+  const fetchCharacters = (url) => {
+    fetch(url)
+      .then(response => response.json())
+      .then(data => setPersonajes(data.personajes))
+      .catch(error => console.log(error))
+  };
+
+  useEffect(() => {
+    fetchCharacters(urlInicial);
+  }, []);
+
+  const filtrarPorGryffindor = () => {
+    const casa = personajes.filter( personaje => personaje.casaDeHogwarts == "Gryffindor")
+    setPersonajes(casa)
+  };
+
+  const filtrarPorHufflepuff = () => {
+    const casa = personajes.filter( personaje => personaje.casaDeHogwarts == "Hufflepuff")
+    setPersonajes(casa)
+  };
+
+  const filtrarPorRavenclaw  = () => {
+    const casa = personajes.filter( personaje => personaje.casaDeHogwarts == "Ravenclaw")
+    setPersonajes(casa)
+  };
+  
+  const filtrarPorSlytherin  = () => {
+    const casa = personajes.filter( personaje => personaje.casaDeHogwarts == "Slytherin")
+    setPersonajes(casa)
+  };
+
+  const mostrarTodosLosPersonajes = () => {
+    const personajes = fetchCharacters(urlInicial)
+    setPersonajes(personajes)
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <Navbar
+        filtrarPorGryffindor={filtrarPorGryffindor}
+        filtrarPorHufflepuff={filtrarPorHufflepuff}
+        filtrarPorRavenclaw={filtrarPorRavenclaw}
+        filtrarPorSlytherin={filtrarPorSlytherin}
+       />
+      
+
+      <div className="container mt-5">
+        <Personajes
+          personajes={personajes} 
+        />
+
+        
+
+      </div>
+
+      <Footer />
+    </Fragment>
+    
   );
 }
 
